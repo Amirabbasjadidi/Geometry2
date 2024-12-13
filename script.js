@@ -2622,3 +2622,159 @@ function goBackToMenu3() {
     document.getElementById('menu-3').style.display = 'flex';
 }
 
+function showInscribedPolygon() {
+    document.getElementById('menu-3').style.display = 'none';
+    document.getElementById('proof-section3').style.display = 'block';
+    document.getElementById('proof3').innerHTML = '';
+
+    drawInscribedPolygon();
+}
+
+function drawInscribedPolygon() {
+    const canvas = document.getElementById('canvas3');
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 100;
+
+    let circleProgress = 0;
+
+    function drawCircle() {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, circleProgress * Math.PI * 2);
+        ctx.stroke();
+        if (circleProgress < 1) {
+            circleProgress += 0.02;
+            requestAnimationFrame(drawCircle);
+        } else {
+            drawPolygonEdges();
+        }
+    }
+
+    function drawPolygonEdges() {
+        const points = [
+            { x: centerX + radius * Math.cos(Math.PI / 6), y: centerY - radius * Math.sin(Math.PI / 6) },
+            { x: centerX - radius * Math.cos(Math.PI / 3), y: centerY - radius * Math.sin(Math.PI / 3) },
+            { x: centerX - radius * Math.cos(Math.PI / 4), y: centerY + radius * Math.sin(Math.PI / 4) },
+            { x: centerX + radius * Math.cos(Math.PI / 5), y: centerY + radius * Math.sin(Math.PI / 5) },
+        ];
+
+        let edgeIndex = 0;
+
+        function animateEdge() {
+            if (edgeIndex >= points.length) {
+                drawDiagonals(points);
+                return;
+            }
+
+            const startPoint = points[edgeIndex];
+            const endPoint = points[(edgeIndex + 1) % points.length];
+            let progress = 0;
+
+            function drawEdge() {
+                ctx.strokeStyle = '#fff';
+                ctx.beginPath();
+                ctx.moveTo(startPoint.x, startPoint.y);
+                ctx.lineTo(
+                    startPoint.x + progress * (endPoint.x - startPoint.x),
+                    startPoint.y + progress * (endPoint.y - startPoint.y)
+                );
+                ctx.stroke();
+
+                progress += 0.02;
+                if (progress <= 1) {
+                    requestAnimationFrame(drawEdge);
+                } else {
+                    edgeIndex++;
+                    animateEdge();
+                }
+            }
+
+            drawEdge();
+        }
+
+        animateEdge();
+    }
+
+    function drawDiagonals(points) {
+        let diagonalIndex = 0;
+        const diagonals = [
+            [points[0], points[2]],
+            [points[1], points[3]]
+        ];
+
+        function animateDiagonal() {
+            if (diagonalIndex >= diagonals.length) {
+                labelPoints(points);
+                return;
+            }
+
+            const [startPoint, endPoint] = diagonals[diagonalIndex];
+            let progress = 0;
+
+            function drawDiagonal() {
+                ctx.setLineDash([5, 5]);
+                ctx.strokeStyle = '#fff';
+                ctx.beginPath();
+                ctx.moveTo(startPoint.x, startPoint.y);
+                ctx.lineTo(
+                    startPoint.x + progress * (endPoint.x - startPoint.x),
+                    startPoint.y + progress * (endPoint.y - startPoint.y)
+                );
+                ctx.stroke();
+
+                progress += 0.02;
+                if (progress <= 1) {
+                    requestAnimationFrame(drawDiagonal);
+                } else {
+                    ctx.setLineDash([]);
+                    diagonalIndex++;
+                    animateDiagonal();
+                }
+            }
+
+            drawDiagonal();
+        }
+
+        animateDiagonal();
+    }
+
+    function labelPoints(points) {
+        const labels = ['A', 'B', 'C', 'D'];
+        ctx.fillStyle = '#ff8000';
+        ctx.font = '20px Estedad';
+
+        points.forEach((point, index) => {
+            ctx.fillText(labels[index], point.x - 10, point.y - 10);
+        });
+
+        ctx.fillText('O', centerX - 10, centerY + 25);
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        const M = { x: centerX + 26, y: centerY - 5 };
+        ctx.fillText('M', M.x - 10, M.y - 10);
+        ctx.beginPath();
+        ctx.arc(M.x, M.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        Proof();
+    }
+
+    function Proof() {
+        const proof = document.getElementById('proof3');
+        const text = 'A + C = B + D = 180<br>MA × MC = MB × MD';
+        typeText(proof, text, 50);
+    }
+
+    drawCircle();
+}
+
