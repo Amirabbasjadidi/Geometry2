@@ -156,6 +156,10 @@ canvas {
     margin-left: 105px;
 }
 
+#back-to-lesson3-btn {
+    margin-left: 105px;
+}
+
 ::-webkit-scrollbar {
   width: 12px;
 }
