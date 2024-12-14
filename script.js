@@ -2771,7 +2771,7 @@ function drawInscribedPolygon() {
 
     function Proof() {
         const proof = document.getElementById('proof3');
-        const text = 'A + C = B + D = 180<br>MA × MC = MB × MD';
+        const text = '∠A + ∠C = ∠B + ∠D = 180<br>MA × MC = MB × MD';
         typeText(proof, text, 50);
     }
 
