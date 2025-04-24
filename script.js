@@ -1115,7 +1115,7 @@ function drawParallelChords() {
             ctx.fillText('O', centerX - 10, centerY - 10);
 
             const proof = document.getElementById('proof');
-            const text = 'فرض: CD ‖ AB<br>حکم: ∿AC = ∿BD<br>خط مورب را رسم میکنیم<br>طبق قضیه موازی مورب ⇒ A = D<br>A و D محاطی اند ⇒ ∿BD/2 = ∿AC/2<br>⇒ ∿BD = ∿AC';
+            const text = 'فرض: BD ‖ AC<br>حکم: ∿AC = ∿BD<br>خط مورب را رسم میکنیم<br>طبق قضیه موازی مورب ⇒ A = D<br>A و D محاطی اند ⇒ ∿BD/2 = ∿AC/2<br>⇒ ∿BD = ∿AC';
             typeText(proof, text, 50);
         }
 
